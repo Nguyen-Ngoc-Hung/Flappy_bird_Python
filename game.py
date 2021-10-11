@@ -9,7 +9,6 @@ background = pygame.image.load("images/background.png")
 bird1 = pygame.image.load('images/bird1.png')
 bird2 = pygame.image.load('images/bird2.png')
 bird3 = pygame.image.load('images/bird3.png')
-ground = pygame.image.load('images/ground.png')
 logo = pygame.image.load('images/logo.png')
 pipe = pygame.image.load('images/pipe.png')
 floor = pygame.image.load('images/floor.png')
@@ -29,12 +28,7 @@ def drawBackground():
     screen.blit(background,(760-y,0))
     y+=1
 
-def drawGround():
-    global x
-    if x>37: x=0
-    for i in range(0,22):
-        screen.blit(ground,(37*i-x,896))
-    x+=4
+
 
 def drawBird():
     global voCanh
@@ -72,6 +66,15 @@ def drawBase():
     screen.blit(floor,(768-x,896))
     x += 4
 
+def vaCham():
+    global gameOver
+    global posBird
+    global mangOng
+    # if posBird == 832:
+    #     gameOver = True
+    if posBird + 90 - mangOng[0][0] < 228:
+        gameOver = True
+
 giaToc=0.6
 doRoi = 0
 alpha=30.0
@@ -81,7 +84,7 @@ alphaX = 50
 speedPipe = 0
 posPipe = 768
 mangOng = []
-
+gameOver = False
 for i in range(1,5):
     temp = []
     temp.append(posPipe)
@@ -96,6 +99,7 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+
         if (event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE)  or event.type ==5:
             doRoi = -12
             alphaX = 50
@@ -104,6 +108,17 @@ while True:
     drawPipes()
     drawBase()
     drawBird()
+
+
+
+    vaCham()
+    if gameOver == True:
+        drawBackground()
+        drawPipes()
+        drawBase()
+        drawBird()
+        print("Game Over")
+        gameOver = False
 
     doRoi += giaToc
     posBird += doRoi
