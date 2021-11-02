@@ -12,13 +12,10 @@ bird3 = pygame.image.load('images/bird3.png')
 logo = pygame.image.load('images/logo.png')
 pipe = pygame.image.load('images/pipe.png')
 floor = pygame.image.load('images/floor.png')
+res =pygame.image.load("images/restart.png").convert()
 
 clock = pygame.time.Clock()
 
-x=0
-y=0
-voCanh=0
-posBird = 200.0
 print(sys.platform)
 
 def drawBackground():
@@ -67,15 +64,26 @@ def drawBase():
     screen.blit(floor,(384-x,448))
     x += 2
 
+def drawGameOver():
+    screen.blit(res,(100,100))
+
 def vaCham():
     global gameOver
     global posBird
     global mangOng
-    # if posBird == 832:
-    #     gameOver = True
-    if posBird + 90 - mangOng[0][0] < 228:
+    if posBird == 416:
         gameOver = True
+    if mangOng[0][0] > 31 and mangOng[0][0] < 145:
+        if posBird > mangOng[0][1] - 32 or posBird < mangOng[0][1] - 125 - 5:
+            gameOver = True
+    elif mangOng[1][0] > 31 and mangOng[1][0] < 145 :
+        if posBird > mangOng[1][1] - 32 or posBird < mangOng[1][1] - 125 - 5:
+            gameOver = True
 
+x=0
+y=0
+voCanh=0
+posBird = 200.0
 giaToc=0.4
 doRoi = 0
 alpha=30.0
@@ -84,8 +92,9 @@ doRongOng = 125
 alphaX = 50
 speedPipe = 0
 posPipe = 384
-mangOng = []
 gameOver = False
+mangOng = []
+
 for i in range(1,5):
     temp = []
     temp.append(posPipe)
@@ -93,8 +102,6 @@ for i in range(1,5):
     mangOng.append(temp)
     posPipe += khoangCachOng
 
-
-print(mangOng)
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -109,7 +116,38 @@ while True:
     drawPipes()
     drawBase()
     drawBird()
-    print(clock)
+    vaCham()
+    if gameOver == True:
+        drawGameOver()
+    while gameOver == True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if (event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE)  or event.type == 5:
+                x=0
+                y=0
+                voCanh=0
+                posBird = 200.0
+                giaToc=0.4
+                doRoi = 0
+                alpha=30.0
+                khoangCachOng = 200
+                doRongOng = 125
+                alphaX = 50
+                speedPipe = 0
+                posPipe = 384
+                mangOng = []
+                gameOver = False
+                for i in range(1,5):
+                    temp = []
+                    temp.append(posPipe)
+                    temp.append(random.randint(150,400))
+                    mangOng.append(temp)
+                    posPipe += khoangCachOng      
+        
+        print("game over")
+
     doRoi += giaToc
     posBird += doRoi
     alphaX -=1.5
